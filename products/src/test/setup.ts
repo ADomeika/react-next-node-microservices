@@ -6,6 +6,7 @@ declare global {
   namespace NodeJS {
     interface Global {
       signin(): string[]
+      url: string
     }
   }
 }
@@ -57,3 +58,5 @@ global.signin = () => {
 
   return [`express:sess=${base64}`]
 }
+
+global.url = '/api/v1/products'

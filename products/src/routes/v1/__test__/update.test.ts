@@ -1,26 +1,49 @@
 import request from 'supertest'
+import mongoose from 'mongoose'
 import { app } from '../../../app'
-import { Product } from '../../../models/product'
 
-describe('Insert route', () => {
-  it(`should have a route handler listening to ${global.url} for POST request`, async () => {
-    const response = await request(app)
-      .post(global.url)
-      .send({})
-  
-    expect(response.status).not.toBe(404)
-  })
+const createProduct = () => {
+  return request(app)
+    .post(global.url)
+    .set('Cookie', global.signin())
+    .send({
+      name: 'New product',
+      price: 19.99,
+      description: 'New product description',
+      size: 'xl',
+      quantity: 2
+    })
+    .expect(201)
+}
 
-  it('should be only accessed if user is signed in', async () => {
+describe('Update route', () => {
+  it('should return 401 if user is not logged in', async () => {
+    const { body: product } = await createProduct()
+
     await request(app)
-      .post(global.url)
-      .send({})
+      .put(`${global.url}/${product.id}`)
+      .send()
       .expect(401)
   })
 
-  it('should return an error with response code 400 if name is not provided', async () => {
+  it('should return 404 if product cannot be found', async () => {
     await request(app)
-      .post(global.url)
+      .put(`${global.url}/${mongoose.Types.ObjectId().toHexString()}`)
+      .set('Cookie', global.signin())
+      .send({
+        name: 'Test product',
+        description: 'Test description',
+        size: 'xs',
+        quantity: 1,
+        price: 6.99
+      })
+      .expect(404)
+  })
+
+  it('should return an error with response code 400 if name is not provided', async () => {
+    const { body: product } = await createProduct()
+    await request(app)
+      .put(`${global.url}/${product.id}`)
       .set('Cookie', global.signin())
       .send({
         description: 'Test description',
@@ -31,7 +54,7 @@ describe('Insert route', () => {
       .expect(400)
 
     await request(app)
-      .post(global.url)
+      .put(`${global.url}/${product.id}`)
       .set('Cookie', global.signin())
       .send({
         name: '',
@@ -44,8 +67,9 @@ describe('Insert route', () => {
   })
 
   it('should return an error with response code 400 if price is not provided or is less than 0', async () => {
+    const { body: product } = await createProduct()
     await request(app)
-      .post(global.url)
+      .put(`${global.url}/${product.id}`)
       .set('Cookie', global.signin())
       .send({
         name: 'Test product',
@@ -57,7 +81,7 @@ describe('Insert route', () => {
       .expect(400)
 
     await request(app)
-      .post(global.url)
+      .put(`${global.url}/${product.id}`)
       .set('Cookie', global.signin())
       .send({
         name: 'Test product',
@@ -69,8 +93,9 @@ describe('Insert route', () => {
   })
 
   it('should return an error with response code 400 if description is not provided', async () => {
+    const { body: product } = await createProduct()
     await request(app)
-      .post(global.url)
+      .put(`${global.url}/${product.id}`)
       .set('Cookie', global.signin())
       .send({
         name: 'Test product',
@@ -81,7 +106,7 @@ describe('Insert route', () => {
       .expect(400)
 
     await request(app)
-      .post(global.url)
+      .put(`${global.url}/${product.id}`)
       .set('Cookie', global.signin())
       .send({
         name: 'Test product',
@@ -94,8 +119,9 @@ describe('Insert route', () => {
   })
 
   it('should return an error with response code 400 if size is not provided', async () => {
+    const { body: product } = await createProduct()
     await request(app)
-      .post(global.url)
+      .put(`${global.url}/${product.id}`)
       .set('Cookie', global.signin())
       .send({
         name: 'Test product',
@@ -106,7 +132,7 @@ describe('Insert route', () => {
       .expect(400)
 
     await request(app)
-      .post(global.url)
+      .put(`${global.url}/${product.id}`)
       .set('Cookie', global.signin())
       .send({
         name: 'Test product',
@@ -119,8 +145,9 @@ describe('Insert route', () => {
   })
 
   it('should return an error with response code 400 if quantity is not provided or is less than 0', async () => {
+    const { body: product } = await createProduct()
     await request(app)
-      .post(global.url)
+      .put(`${global.url}/${product.id}`)
       .set('Cookie', global.signin())
       .send({
         name: 'Test product',
@@ -131,7 +158,7 @@ describe('Insert route', () => {
       .expect(400)
 
     await request(app)
-      .post(global.url)
+      .put(`${global.url}/${product.id}`)
       .set('Cookie', global.signin())
       .send({
         name: 'Test product',
@@ -143,28 +170,35 @@ describe('Insert route', () => {
       .expect(400)
   })
 
-  it('should create a product with valid inputs', async () => {
-    let products = await Product.find({})
-    expect(products.length).toBe(0)
+  it('should successfuly update a product', async () => {
+    const { body: product } = await createProduct()
 
-    const data = {
-      name: 'Test item',
-      price: 19.99,
-      description: 'Test description',
-      size: 'xs',
-      quantity: 1
+    const newProd = {
+      name: 'Updated product name',
+      description: 'Updated description',
+      size: 'xl',
+      price: 16.99,
+      quantity: 1,
+      additionalInfo: 'Some new info'
     }
 
     await request(app)
-      .post(global.url)
+      .put(`${global.url}/${product.id}`)
       .set('Cookie', global.signin())
-      .send(data)
-      .expect(201)
-  
-    products = await Product.find({})
-    expect(products.length).toBe(1)
-    expect(products[0].name).toBe(data.name)
-    expect(products[0].description).toBe(data.description)
-    expect(products[0].price).toBe(data.price)
+      .send(newProd)
+      .expect(200)
+
+    const response = await request(app)
+      .get(`${global.url}/${product.id}`)
+      .set('Cookie', global.signin())
+      .send()
+      .expect(200)
+
+    expect(response.body.name).toBe(newProd.name)
+    expect(response.body.description).toBe(newProd.description)
+    expect(response.body.size).toBe(newProd.size)
+    expect(response.body.price).toBe(newProd.price)
+    expect(response.body.quantity).toBe(newProd.quantity)
+    expect(response.body.additionalInfo).toBe(newProd.additionalInfo)
   })
 })
