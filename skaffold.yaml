@@ -1,0 +1,43 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+      - ./infra/k8s-dev/*
+build:
+  local:
+    push: false
+  artifacts:
+    - image: adomeika94/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: adomeika94/modosdesign-products
+      context: products
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
+    - image: adomeika94/modosdesign-client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '/**/*.js'
+            dest: .
+    - image: adomeika94/modosdesign-images
+      context: images
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: '/**/*.js'
+            dest: .

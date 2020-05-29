@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:
+    - host: modosdesign.dev
+      http:
+        paths:
+          - path: /api/v1/auth/?(.*)
+            backend:
+              serviceName: auth-srv
+              servicePort: 3000
+          - path: /api/v1/images/?(.*)
+            backend:
+              serviceName: images-srv
+              servicePort: 3000
+          - path: /api/v1/products/?(.*)
+            backend:
+              serviceName: products-srv
+              servicePort: 3000
+          - path: /?(.*)
+            backend:
+              serviceName: client-srv
+              servicePort: 3000
