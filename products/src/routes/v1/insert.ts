@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express'
 import { body } from 'express-validator'
 import { requireAuth, validateRequest, ProductSize } from '@admodosdesign/common'
 import { Product } from '../../models/product'
+import { ProductCreatedPublisher } from '../../events/publishers/product-created-publisher'
+import { natsWrapper } from '../../nats-wrapper'
 
 const router = express.Router()
 
@@ -47,6 +49,17 @@ router.post('/api/v1/products', requireAuth, [
   })
 
   await product.save()
+
+  new ProductCreatedPublisher(natsWrapper.client).publish({
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    size: product.size,
+    quantity: product.quantity,
+    description: product.description,
+    additionalInfo: product.additionalInfo,
+    version: product.version
+  })
 
   res.status(201).send(product)
 })

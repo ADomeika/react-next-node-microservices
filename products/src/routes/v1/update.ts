@@ -1,7 +1,15 @@
 import express, { Request, Response } from 'express'
 import { body } from 'express-validator'
-import { validateRequest, requireAuth, ProductSize, NotFoundError } from '@admodosdesign/common'
+import {
+  validateRequest,
+  requireAuth,
+  ProductSize,
+  NotFoundError
+} from '@admodosdesign/common'
+
 import { Product } from '../../models/product'
+import { ProductUpdatedPublisher } from '../../events/publishers/product-updated-publisher'
+import { natsWrapper } from '../../nats-wrapper'
 
 const router = express.Router()
 
@@ -62,6 +70,18 @@ router.put('/api/v1/products/:id', requireAuth, [
   })
 
   await product.save()
+
+  new ProductUpdatedPublisher(natsWrapper.client).publish({
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    size: product.size,
+    quantity: product.quantity,
+    description: product.description,
+    additionalInfo: product.additionalInfo,
+    version: product.version,
+    cartId: product.cartId
+  })
 
   res.send(product)
 })

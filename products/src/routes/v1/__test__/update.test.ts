@@ -1,6 +1,8 @@
 import request from 'supertest'
 import mongoose from 'mongoose'
 import { app } from '../../../app'
+import { natsWrapper } from '../../../nats-wrapper'
+import { ProductUpdatedPublisher } from '../../../events/publishers/product-updated-publisher'
 
 const createProduct = () => {
   return request(app)
@@ -200,5 +202,25 @@ describe('Update route', () => {
     expect(response.body.price).toBe(newProd.price)
     expect(response.body.quantity).toBe(newProd.quantity)
     expect(response.body.additionalInfo).toBe(newProd.additionalInfo)
+  })
+
+  it('should publish an event with successful updation of product', async () => {
+    const { body: product } = await createProduct()
+    const newProd = {
+      name: 'Updated product name',
+      description: 'Updated description',
+      size: 'xl',
+      price: 16.99,
+      quantity: 1,
+      additionalInfo: 'Some new info'
+    }
+
+    await request(app)
+      .put(`${global.url}/${product.id}`)
+      .set('Cookie', global.signin())
+      .send(newProd)
+      .expect(200)
+  
+    expect(natsWrapper.client.publish).toHaveBeenCalled()
   })
 })

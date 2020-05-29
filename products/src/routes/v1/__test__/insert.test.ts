@@ -1,6 +1,7 @@
 import request from 'supertest'
 import { app } from '../../../app'
 import { Product } from '../../../models/product'
+import { natsWrapper } from '../../../nats-wrapper'
 
 describe('Insert route', () => {
   it(`should have a route handler listening to ${global.url} for POST request`, async () => {
@@ -166,5 +167,23 @@ describe('Insert route', () => {
     expect(products[0].name).toBe(data.name)
     expect(products[0].description).toBe(data.description)
     expect(products[0].price).toBe(data.price)
+  })
+
+  it('should publish an event with successful creation of product', async () =>{
+    const data = {
+      name: 'Test item',
+      price: 19.99,
+      description: 'Test description',
+      size: 'xs',
+      quantity: 1
+    }
+
+    await request(app)
+      .post(global.url)
+      .set('Cookie', global.signin())
+      .send(data)
+      .expect(201)
+  
+    expect(natsWrapper.client.publish).toHaveBeenCalled()
   })
 })
