@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: carts-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: carts-mongo
+  template:
+    metadata:
+      labels:
+        app: carts-mongo
+    spec:
+      containers:
+        - name: carts-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: carts-mongo-srv
+spec:
+  selector:
+    app: carts-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

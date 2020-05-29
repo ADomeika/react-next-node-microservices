@@ -25,6 +25,14 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: adomeika94/modosdesign-carts
+      context: carts
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
     - image: adomeika94/modosdesign-client
       context: client
       docker:

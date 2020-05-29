@@ -54,8 +54,7 @@ router.put('/api/v1/products/:id', requireAuth, [
     price,
     quantity,
     size,
-    images,
-    cartId
+    images
   } = req.body
 
   product.set({
@@ -65,8 +64,7 @@ router.put('/api/v1/products/:id', requireAuth, [
     price,
     quantity,
     size,
-    images,
-    cartId
+    images
   })
 
   await product.save()
@@ -79,8 +77,7 @@ router.put('/api/v1/products/:id', requireAuth, [
     quantity: product.quantity,
     description: product.description,
     additionalInfo: product.additionalInfo,
-    version: product.version,
-    cartId: product.cartId
+    version: product.version
   })
 
   res.send(product)

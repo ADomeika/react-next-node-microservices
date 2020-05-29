@@ -2,7 +2,9 @@ import mongoose from 'mongoose'
 
 import { app } from './app'
 import { natsWrapper } from './nats-wrapper'
-import { CartCreatedListener } from './events/listeners/cart-created-listener'
+import { ProductCreatedListener } from './events/listeners/product-created-listener'
+import { ProductUpdatedListener } from './events/listeners/product-updated-listener'
+import { ProductRemovedListener } from './events/listeners/product-removed-listener'
 
 const start = async () => {
   if (!process.env.JWT_KEY) {
@@ -38,20 +40,22 @@ const start = async () => {
     process.on('SIGINT', () => natsWrapper.client.close())
     process.on('SIGTERM', () => natsWrapper.client.close())
 
-    new CartCreatedListener(natsWrapper.client).listen()
+    new ProductCreatedListener(natsWrapper.client).listen()
+    new ProductUpdatedListener(natsWrapper.client).listen()
+    new ProductRemovedListener(natsWrapper.client).listen()
 
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useCreateIndex: true
     })
-    console.log('Connected to MongoDB')
+    console.log('Connected to MongoDb')
   } catch (err) {
     console.error(err)
   }
 
   app.listen(3000, () => {
-    console.log('Listening on port 3000')
+    console.log('Listening on port 3000!')
   })
 }
 

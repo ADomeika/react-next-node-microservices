@@ -14,6 +14,10 @@ spec:
             backend:
               serviceName: auth-srv
               servicePort: 3000
+          - path: /api/v1/carts/?(.*)
+            backend:
+              serviceName: carts-srv
+              servicePort: 3000
           - path: /api/v1/images/?(.*)
             backend:
               serviceName: images-srv
