@@ -3,6 +3,8 @@ import mongoose from 'mongoose'
 import { app } from '../../../app'
 import { natsWrapper } from '../../../nats-wrapper'
 import { ProductUpdatedPublisher } from '../../../events/publishers/product-updated-publisher'
+import { Product } from '../../../models/product'
+import { ProductSize } from '@admodosdesign/common'
 
 const createProduct = () => {
   return request(app)
@@ -205,7 +207,17 @@ describe('Update route', () => {
   })
 
   it('should publish an event with successful updation of product', async () => {
-    const { body: product } = await createProduct()
+    const product = Product.build({
+      name: 'New product name',
+      description: 'New description',
+      size: ProductSize.L,
+      price: 6.99,
+      quantity: 2,
+      additionalInfo: 'Some info'
+    })
+    
+    await product.save()
+
     const newProd = {
       name: 'Updated product name',
       description: 'Updated description',

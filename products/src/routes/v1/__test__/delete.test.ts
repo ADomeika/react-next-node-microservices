@@ -2,6 +2,8 @@ import request from 'supertest'
 import mongoose from 'mongoose'
 import { app } from '../../../app'
 import { natsWrapper } from '../../../nats-wrapper'
+import { Product } from '../../../models/product'
+import { ProductSize } from '@admodosdesign/common'
 
 const createProduct = () => {
   return request(app)
@@ -60,17 +62,16 @@ describe('Delete route', () => {
   })
 
   it('should publish an event with successful deletion of product', async () => {
-    const { body: product } = await request(app)
-      .post(global.url)
-      .set('Cookie', global.signin())
-      .send({
-        name: 'New product',
-        price: 19.99,
-        description: 'New product description',
-        size: 'xl',
-        quantity: 2
-      })
-      .expect(201)
+    const product = Product.build({
+      name: 'New product name',
+      description: 'New description',
+      size: ProductSize.L,
+      price: 6.99,
+      quantity: 2,
+      additionalInfo: 'Some info'
+    })
+    
+    await product.save()
 
     await request(app)
       .delete(`${global.url}/${product.id}`)
