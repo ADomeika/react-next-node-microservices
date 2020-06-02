@@ -1,40 +1,14 @@
 import request from 'supertest'
 import mongoose from 'mongoose'
+import { ProductSize } from '@admodosdesign/common'
 import { app } from '../../../app'
 import { Product } from '../../../models/product'
-import { ProductSize } from '@admodosdesign/common'
 
 describe('Show route', () => {
   it('should return 404 if cart does not exist', async () => {
     await request(app)
-      .get(`${global.url}/${mongoose.Types.ObjectId().toHexString()}`)
+      .get(global.url)
       .expect(404)
-  })
-
-  it('should return 401 if cart does not belong to user making request', async () => {
-    const cookie = global.createCartUid()
-    const product = Product.build({
-      id: mongoose.Types.ObjectId().toHexString(),
-      name: 'Product name',
-      price: 19.99,
-      size: ProductSize.L,
-      quantity: 1
-    })
-
-    await product.save()
-
-    const { body: cart } = await request(app)
-      .post(global.url)
-      .set('Cookie', cookie)
-      .send({
-        productId: product.id,
-        quantity: 1
-      })
-
-    await request(app)
-      .get(`${global.url}/${cart.id}`)
-      .set('Cookie', global.createCartUid())
-      .expect(401)
   })
 
   it('should respond with cart details', async () => {
@@ -49,7 +23,7 @@ describe('Show route', () => {
 
     await product.save()
 
-    const { body: cart } = await request(app)
+    await request(app)
       .post(global.url)
       .set('Cookie', cookie)
       .send({
@@ -58,7 +32,7 @@ describe('Show route', () => {
       })
 
     const response = await request(app)
-      .get(`${global.url}/${cart.id}`)
+      .get(global.url)
       .set('Cookie', cookie)
       .expect(200)
 

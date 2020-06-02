@@ -7,7 +7,6 @@ import { NotFoundError, errorHandler, currentCartUser } from '@admodosdesign/com
 import { insertRouter } from './routes/v1/insert'
 import { updateRouter } from './routes/v1/update'
 import { showRouter } from './routes/v1/show'
-// import { indexRouter } from './routes/index'
 import { deleteRouter } from './routes/v1/delete'
 
 const app = express()
@@ -24,7 +23,6 @@ app.use(currentCartUser)
 app.use(insertRouter)
 app.use(updateRouter)
 app.use(showRouter)
-// app.use(indexRouter)
 app.use(deleteRouter)
 
 app.all('*', async (req, res) => {
