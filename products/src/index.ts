@@ -3,6 +3,8 @@ import mongoose from 'mongoose'
 import { app } from './app'
 import { natsWrapper } from './nats-wrapper'
 import { CartCreatedListener } from './events/listeners/cart-created-listener'
+import { CartUpdatedListener } from './events/listeners/cart-updated-listener'
+import { CartRemovedListener } from './events/listeners/cart-removed-listener'
 
 const start = async () => {
   if (!process.env.JWT_KEY) {
@@ -39,6 +41,8 @@ const start = async () => {
     process.on('SIGTERM', () => natsWrapper.client.close())
 
     new CartCreatedListener(natsWrapper.client).listen()
+    new CartUpdatedListener(natsWrapper.client).listen()
+    new CartRemovedListener(natsWrapper.client).listen()
 
     await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,

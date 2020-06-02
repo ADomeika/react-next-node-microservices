@@ -1,13 +1,11 @@
 import mongoose from 'mongoose'
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current'
-import { ProductSize } from '@admodosdesign/common'
 
 interface CartAttrs {
   userId: string
   expiresAt: Date
   products: {
-    id: string,
-    size: ProductSize,
+    product: string,
     quantity: number
   }[]
 }
@@ -16,8 +14,7 @@ interface CartDoc extends mongoose.Document {
   userId: string
   expiresAt: Date
   products: {
-    id: string,
-    size: ProductSize,
+    product: string,
     quantity: number
   }[]
   version: number
@@ -36,10 +33,18 @@ const cartSchema = new mongoose.Schema(
     expiresAt: {
       type: mongoose.Schema.Types.Date
     },
-    products: {
-      type: [mongoose.Schema.Types.Mixed],
-      ref: 'Product'
-    }
+    products: [{
+      _id: false,
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+        required: true
+      },
+      quantity: {
+        type: Number,
+        required: true
+      }
+    }]
   },
   {
     toJSON: {

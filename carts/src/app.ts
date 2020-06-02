@@ -5,9 +5,10 @@ import cookieSession from 'cookie-session'
 import { NotFoundError, errorHandler, currentCartUser } from '@admodosdesign/common'
 
 import { insertRouter } from './routes/v1/insert'
-// import { showRouter } from './routes/show'
+import { updateRouter } from './routes/v1/update'
+import { showRouter } from './routes/v1/show'
 // import { indexRouter } from './routes/index'
-// import { destroyRouter } from './routes/update'
+import { deleteRouter } from './routes/v1/delete'
 
 const app = express()
 app.set('trust proxy', true)
@@ -21,9 +22,10 @@ app.use(
 app.use(currentCartUser)
 
 app.use(insertRouter)
-// app.use(showRouter)
+app.use(updateRouter)
+app.use(showRouter)
 // app.use(indexRouter)
-// app.use(destroyRouter)
+app.use(deleteRouter)
 
 app.all('*', async (req, res) => {
   throw new NotFoundError()

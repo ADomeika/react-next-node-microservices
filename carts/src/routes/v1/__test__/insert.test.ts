@@ -19,7 +19,6 @@ describe('Insert route', () => {
       .post(global.url)
       .send({
         productId: mongoose.Types.ObjectId().toHexString(),
-        size: 'xl',
         quantity: 1
       })
       .expect(404)
@@ -29,7 +28,6 @@ describe('Insert route', () => {
     await request(app)
       .post(global.url)
       .send({
-        size: 'xl',
         quantity: 1
       })
       .expect(400)
@@ -38,35 +36,6 @@ describe('Insert route', () => {
       .post(global.url)
       .send({
         productId: '',
-        size: 'xl',
-        quantity: 1
-      })
-      .expect(400)
-  })
-
-  it('should return 400 if size is not provided', async () => {
-    await request(app)
-      .post(global.url)
-      .send({
-        productId: mongoose.Types.ObjectId().toHexString(),
-        size: '',
-        quantity: 1
-      })
-      .expect(400)
-
-    await request(app)
-      .post(global.url)
-      .send({
-        productId: mongoose.Types.ObjectId().toHexString(),
-        size: 'qwerty',
-        quantity: 1
-      })
-      .expect(400)
-
-    await request(app)
-      .post(global.url)
-      .send({
-        productId: mongoose.Types.ObjectId().toHexString(),
         quantity: 1
       })
       .expect(400)
@@ -76,8 +45,7 @@ describe('Insert route', () => {
     await request(app)
       .post(global.url)
       .send({
-        productId: mongoose.Types.ObjectId().toHexString(),
-        size: 'l'
+        productId: mongoose.Types.ObjectId().toHexString()
       })
       .expect(400)
 
@@ -85,29 +53,7 @@ describe('Insert route', () => {
       .post(global.url)
       .send({
         productId: mongoose.Types.ObjectId().toHexString(),
-        size: 'l',
         quantity: 0
-      })
-      .expect(400)
-  })
-
-  it('should return 400 if size provided does not exist', async () => {
-    const product = Product.build({
-      id: mongoose.Types.ObjectId().toHexString(),
-      name: 'Product name',
-      price: 19.99,
-      size: ProductSize.L,
-      quantity: 1
-    })
-
-    await product.save()
-
-    await request(app)
-      .post(global.url)
-      .send({
-        productId: product.id,
-        size: 'm',
-        quantity: 1
       })
       .expect(400)
   })
@@ -127,7 +73,6 @@ describe('Insert route', () => {
       .post(global.url)
       .send({
         productId: product.id,
-        size: 'l',
         quantity: 2
       })
       .expect(400)
@@ -148,7 +93,6 @@ describe('Insert route', () => {
       .post(global.url)
       .send({
         productId: product.id,
-        size: 'l',
         quantity: 1
       })
       .expect(201)
@@ -171,7 +115,6 @@ describe('Insert route', () => {
       .post(global.url)
       .send({
         productId: product.id,
-        size: 'l',
         quantity: 1
       })
       .expect(201)

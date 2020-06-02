@@ -1,14 +1,18 @@
 import { Message } from 'node-nats-streaming'
-import { Subjects, Listener, CartCreatedEvent } from '@admodosdesign/common'
+import { Subjects, Listener, CartUpdatedEvent } from '@admodosdesign/common'
 import { Product } from '../../models/product'
 import { queueGroupName } from './queue-group-name'
 import { ProductUpdatedPublisher } from '../publishers/product-updated-publisher'
 
-export class CartCreatedListener extends Listener<CartCreatedEvent> {
-  subject: Subjects.CartCreated = Subjects.CartCreated
+export class CartUpdatedListener extends Listener<CartUpdatedEvent> {
+  subject: Subjects.CartUpdated = Subjects.CartUpdated
   queueGroupName = queueGroupName
 
-  async onMessage(data: CartCreatedEvent['data'], msg: Message) {
+  async onMessage(data: CartUpdatedEvent['data'], msg: Message) {
+    if (!data.product) {
+      return msg.ack()
+    }
+    
     const { product: { id, quantity } } = data
 
     const product = await Product.findById(id)

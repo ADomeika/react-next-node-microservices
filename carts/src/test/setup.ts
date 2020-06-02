@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto'
 import { MongoMemoryServer } from 'mongodb-memory-server'
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
@@ -6,6 +7,7 @@ declare global {
   namespace NodeJS {
     interface Global {
       signin(): string[]
+      createCartUid(): string[]
       url: string
     }
   }
@@ -60,3 +62,15 @@ global.signin = () => {
 }
 
 global.url = '/api/v1/carts'
+
+global.createCartUid = () => {
+  const uid = randomBytes(16).toString('hex')
+
+  const session = { currentCartUser: uid }
+
+  const sessionJSON = JSON.stringify(session)
+
+  const base64 = Buffer.from(sessionJSON).toString('base64')
+
+  return [`express:sess=${base64}`]
+}
