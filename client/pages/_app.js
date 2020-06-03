@@ -1,12 +1,25 @@
 import 'react-dropzone-uploader/dist/styles.css'
 import '../styles/main.scss'
+import Head from 'next/head'
 import buildClient from '../api/build-client'
 import Header from '../components/header'
 
-const AppComponent = ({ Component, pageProps }) => {
+const AppComponent = ({ Component, pageProps, cart }) => {
   return (
     <div>
-      <Header />
+      <Head>
+        <title>MoDo's Design</title>
+        <meta
+          name="description"
+          content="Unikalių drabužių parduotuvė VISIEMS."
+        >
+        </meta>
+        <meta
+          name="keywords"
+          content="drabuziai internetu, rubai internetu, sukneles, suknele, sijonai, tunikos, palaidines, kelnes, megztiniai, drabuziu parduotuve, sukneles internetu, drabužiai visiems, unikalus rubai, unikalu, visoje lietuvoje, preke lietuviska, lietuviska preke"
+        ></meta>
+      </Head>
+      <Header cart={cart} />
       <main>
         <Component {...pageProps} />
       </main>
@@ -16,11 +29,10 @@ const AppComponent = ({ Component, pageProps }) => {
 
 AppComponent.getInitialProps = async ({ Component, ctx }) => {
   const client = buildClient(ctx)
-  let data = {}
+  let cart = {}
   try {
     const response = await client.get('/api/v1/carts')
-    data = response.data
-    console.log(data)
+    cart = response.data
   } catch (e) {}
 
   let pageProps = {}
@@ -30,7 +42,7 @@ AppComponent.getInitialProps = async ({ Component, ctx }) => {
   
   return {
     pageProps,
-    ...data
+    cart
   }
 }
 

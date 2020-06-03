@@ -1,0 +1,88 @@
+export default () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 512 512"
+    className="header-icon"
+  >
+    <linearGradient
+      id="instagram-a"
+      x1="-46"
+      x2="-32.93"
+      y1="634.12"
+      y2="647.19"
+      gradientTransform="matrix(32 0 0 -32 1519 20757)"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop
+        offset="0"
+        stopColor="#ffc107"
+      />
+      <stop
+        offset=".51"
+        stopColor="#f44336"
+      />
+      <stop
+        offset=".99"
+        stopColor="#9c27b0"
+      />
+    </linearGradient>
+    <path
+      fill="url(#instagram-a)"
+      d="M352 0H160C71.65 0 0 71.65 0 160v192c0 88.35 71.65 160 160 160h192c88.35 0 160-71.65 160-160V160C512 71.65 440.35 0 352 0zm112 352c0 61.76-50.24 112-112 112H160c-61.76 0-112-50.24-112-112V160C48 98.24 98.24 48 160 48h192c61.76 0 112 50.24 112 112v192z"
+    />
+    <linearGradient
+      id="instagram-b"
+      x1="-42.3"
+      x2="-36.64"
+      y1="637.83"
+      y2="643.48"
+      gradientTransform="matrix(32 0 0 -32 1519 20757)"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop
+        offset="0"
+        stopColor="#ffc107"
+      />
+      <stop
+        offset=".51"
+        stopColor="#f44336"
+      />
+      <stop
+        offset=".99"
+        stopColor="#9c27b0"
+      />
+    </linearGradient>
+    <path
+      fill="url(#instagram-b)"
+      d="M256 128c-70.69 0-128 57.31-128 128s57.31 128 128 128 128-57.31 128-128-57.31-128-128-128zm0 208c-44.1 0-80-35.9-80-80 0-44.13 35.9-80 80-80s80 35.87 80 80c0 44.1-35.9 80-80 80z"
+    />
+    <linearGradient
+      id="instagram-c"
+      x1="-35.55"
+      x2="-34.79"
+      y1="644.58"
+      y2="645.33"
+      gradientTransform="matrix(32 0 0 -32 1519 20757)"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop
+        offset="0"
+        stopColor="#ffc107"
+      />
+      <stop
+        offset=".51"
+        stopColor="#f44336"
+      />
+      <stop
+        offset=".99"
+        stopColor="#9c27b0"
+      />
+    </linearGradient>
+    <circle
+      cx="393.6"
+      cy="118.4"
+      r="17.06"
+      fill="url(#instagram-c)"
+    />
+  </svg>
+)
