@@ -1,0 +1,75 @@
+.hero-section {
+  background-color: lighten($primary-color, 40%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $base-unit * 10 $base-unit * 5;
+
+  @include tablet {
+    padding: $base-unit * 16 $base-unit * 8;
+  }
+
+  @include desktop {
+    padding: $base-unit * 20 $base-unit * 10;
+  }
+
+  .title {
+    font-size: $base-font-size * 3;
+
+    @include tablet {
+      font-size: $base-font-size * 4;
+    }
+
+    @include desktop {
+      font-size: $base-font-size * 5;
+    }
+  }
+
+  .subtitle {
+    font-size: $base-font-size * 2;
+
+    @include tablet {
+      font-size: $base-font-size * 3;
+    }
+
+    @include desktop {
+      font-size: $base-font-size * 4;
+    }
+  }
+
+  .call-to-action {
+    align-self: center;
+    border-radius: $base-unit * 3;
+    background-color: $primary-color;
+    color: $white;
+    font-size: $base-font-size * 1.5;
+    display: inline-block;
+    margin-top: $base-unit * 3;
+    padding: $base-unit * 1.5 $base-unit * 3;
+    transition: background-color .2s linear;
+
+    @include tablet {
+      align-self: flex-start;
+    }
+
+    &:hover {
+      background-color: darken($primary-color, 20%);
+    }
+  }
+}
+
+.hero {
+  &__image {
+    display: none;
+
+    @include tablet {
+      display: block;
+    }
+  }
+
+  &__description {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -1,7 +1,13 @@
+@import './base/variables';
+@import './base/mixins';
 @import './base/reset';
 @import './base/typography';
 @import './base/components';
 
-@import './layout/header';
+@import './layouts/header';
+@import './layouts/navigation';
+@import './layouts/product';
 
-@import './components/shopping-cart-holder';
+@import './pages/shop';
+
+@import './sections/hero';

@@ -1,19 +1,15 @@
 import Head from 'next/head'
 
-const ShopPage = ({ products }) => {
+import Products from '../../components/shop/products'
+
+const ShopPage = ({ products, cart }) => {
   return (
     <div>
       <Head>
         <title>MoDo's Design Shop Page</title>
         <meta name="robots" content="all"></meta>
       </Head>
-      <div>
-        {products.map(product => (
-          <div key={product.id}>
-            {product.name}
-          </div>
-        ))}
-      </div>
+      <Products products={products} cart={cart} />
     </div>
   )
 }

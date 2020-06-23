@@ -1,5 +1,7 @@
 import 'react-dropzone-uploader/dist/styles.css'
+import '../styles/vendors/font-awesome.css'
 import '../styles/main.scss'
+
 import Head from 'next/head'
 import buildClient from '../api/build-client'
 import Header from '../components/header'
@@ -12,8 +14,7 @@ const AppComponent = ({ Component, pageProps, cart }) => {
         <meta
           name="description"
           content="Unikalių drabužių parduotuvė VISIEMS."
-        >
-        </meta>
+        ></meta>
         <meta
           name="keywords"
           content="drabuziai internetu, rubai internetu, sukneles, suknele, sijonai, tunikos, palaidines, kelnes, megztiniai, drabuziu parduotuve, sukneles internetu, drabužiai visiems, unikalus rubai, unikalu, visoje lietuvoje, preke lietuviska, lietuviska preke"
@@ -21,7 +22,7 @@ const AppComponent = ({ Component, pageProps, cart }) => {
       </Head>
       <Header cart={cart} />
       <main>
-        <Component {...pageProps} />
+        <Component {...pageProps} cart={cart} />
       </main>
     </div>
   )

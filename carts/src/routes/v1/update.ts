@@ -48,7 +48,13 @@ router.patch('/api/v1/carts/:id', [
     })
     cart.set({ products })
   } else {
-    cart.set({ products: cart.products.push() })
+    cart.set({
+      products: [...cart.products, {
+        product: productId,
+        quantity
+      }]
+    })
+    console.log(cart.products)
   }
 
   await cart.save()
